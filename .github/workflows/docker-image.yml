@@ -18,14 +18,14 @@ jobs:
 #    - name: Build the Docker image
 #      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
-    - name: Running Open Source Security by Snyk
+    - name: Running Open Source Security by Snyk (SCA)
       run: |
           curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.210.0/snyk-linux" 
           chmod -R +x ./snyk 
           ./snyk auth ${{ secrets.SNYK_AUTH_TOKEN }} 
           ./snyk monitor
           
-    - name: Running Horusec Security
+    - name: Running Horusec Security (SAST)
       run: |
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
           horusec start -p .
