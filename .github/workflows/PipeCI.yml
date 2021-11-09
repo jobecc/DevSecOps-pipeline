@@ -1,0 +1,53 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a set of commands using the runners shell
+      - name: Running Open Source Security by Snyk
+        run: |
+          curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.210.0/snyk-linux" 
+          chmod -R +x ./snyk 
+          ./snyk auth ${{ secrets.SNYK_AUTH_TOKEN }} 
+          ./snyk monitor
+          
+      - name: Running Horusec Security
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
+          horusec start -p .
+          
+      - name: Deep Security Smart Check Image Scan 
+        # Be sure to specify the latest version of smartcheck-scan-action
+        uses: deep-security/smartcheck-scan-action@v1.1.0
+        with:
+          DSSC_IMAGE_NAME: 179239123302.dkr.ecr.us-east-1.amazonaws.com/petclinic-app:latest
+          DSSC_SMARTCHECK_HOST: ${{ secrets.DSSC_SMARTCHECK_HOST }}
+          DSSC_SMARTCHECK_USER: ${{ secrets.DSSC_SMARTCHECK_USER }}
+          DSSC_SMARTCHECK_PASSWORD: ${{ secrets.DSSC_SMARTCHECK_PASSWORD }}
+          # You will need to generate an access key and secret for your AWS user
+          DSSC_IMAGE_PULL_AUTH: '{"aws":{"region":"us-east-1","accessKeyID":"${{ secrets.AWS_ACCESS_KEY_ID }}","secretAccessKey":"${{ secrets.AWS_SECRET_ACCESS_KEY }}"}}'
+          DSSC_FINDINGS_THRESHOLD: '{"malware": 100, "vulnerabilities": { "defcon1": 100, "critical": 2, "high": 100 }, "contents": { "defcon1": 100, "critical": 100, "high": 100 }, "checklists": { "defcon1": 100, "critical": 100, "high": 100 }}'
+          DSSC_INSECURE_SKIP_TLS_VERIFY: true
+          DSSC_INSECURE_SKIP_REGISTRY_TLS_VERIFY: true
