@@ -30,6 +30,11 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
           horusec start -p .
 
-    - uses: stackhawk/hawkscan-action@v1.3.2
+#    - uses: stackhawk/hawkscan-action@v1.3.2
+#      with:
+#        apiKey: ${{ secrets.HAWK_API_KEY }}
+
+    - name: ZAP Scan
+      uses: zaproxy/action-full-scan@v0.3.0
       with:
-        apiKey: ${{ secrets.HAWK_API_KEY }}
+        target: 'https://dvwa.co.uk/'
