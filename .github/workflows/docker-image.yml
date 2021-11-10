@@ -15,6 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+
     - name: Running Open Source Security by Snyk (SCA)
       run: |
           curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.210.0/snyk-linux" 
@@ -26,16 +27,12 @@ jobs:
       run: |
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
           horusec start -p .
-
+          
     - name: Build the Docker image
       run: docker build . --file Dockerfile -t petclinictest
       
     - name: Running Docker Image
       run: docker run --rm -p 8080:8080 --name petclinic petclinic
-
-#    - uses: stackhawk/hawkscan-action@v1.3.2
-#      with:
-#        apiKey: ${{ secrets.HAWK_API_KEY }}
 
     - name: ZAP Scan
       uses: zaproxy/action-full-scan@v0.3.0
