@@ -14,9 +14,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
-#    - name: Build the Docker image
-#      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
     - name: Running Open Source Security by Snyk (SCA)
       run: |
@@ -29,6 +26,9 @@ jobs:
       run: |
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
           horusec start -p .
+
+#    - name: Build the Docker image
+#      run: docker build . --file Dockerfile -t petclinictest
 
 #    - uses: stackhawk/hawkscan-action@v1.3.2
 #      with:
