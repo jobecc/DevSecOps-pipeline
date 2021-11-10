@@ -29,10 +29,11 @@ jobs:
           horusec start -p .
           
     - name: Build the Docker image
-      run: docker build . --file Dockerfile -t petclinictest
+#      run: docker build . --file Dockerfile -t petclinictest
+      run: DOCKER_BUILDKIT=1 docker build -t petclinic .
       
     - name: Running Docker Image
-      run: docker run --rm -p 8080:8080 --name petclinic
+      run: docker run --rm -p 8080:8080 --name petclinic petclinic
       
     - name: Get port
       run: docker port petclinic 8080
