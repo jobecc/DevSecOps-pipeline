@@ -36,7 +36,7 @@ jobs:
       run: docker images
 
     - name: Running Docker Image
-      run: docker run --rm -p 8080:8080 --name petclinic petclinic
+      run: docker run --rm -p 8080:8080 --name petclinic petclinic | docker port petclinic 8080
       
     - name: Get port
       run: docker port petclinic 8080
