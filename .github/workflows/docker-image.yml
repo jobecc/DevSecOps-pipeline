@@ -30,5 +30,6 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
           horusec start -p .
 
-    - name: OWASP ZAP Full Scan
-      uses: zaproxy/action-full-scan@v0.3.0
+    - uses: stackhawk/hawkscan-action@v1.3.2
+      with:
+        apiKey: ${{ secrets.HAWK_API_KEY }}
