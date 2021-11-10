@@ -32,11 +32,13 @@ jobs:
 #      run: docker build . --file Dockerfile -t petclinictest
       run: DOCKER_BUILDKIT=1 docker build -t petclinic .
       
+    - name: Get port
+      run: docker port petclinic 8080
+      
     - name: Running Docker Image
       run: docker run --rm -p 8080:8080 --name petclinic petclinic
       
-    - name: Get port
-      run: docker port petclinic 8080
+
 
     - name: ZAP Scan
       uses: zaproxy/action-full-scan@v0.3.0
